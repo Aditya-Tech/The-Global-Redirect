@@ -18,7 +18,9 @@
     <script>
       function initialize() {
 
-
+        $.get('http://localhost:3000/', {}, function(data){
+          console.log(data)
+        });
         var options = {atmosphere: true, center: [0, 0], zoom: 3};
         var earth = new WE.map('earth_div', options);
         WE.tileLayer('http://tileserver.maptiler.com/nasa/{z}/{x}/{y}.jpg', {
@@ -56,14 +58,6 @@
         //
         //
         // });
-
-
-
-        var socket = io('http://localhost');
-        socket.on('news', function (data) {
-          console.log(data);
-          socket.emit('my other event', { my: 'data' });
-        });
       }
     </script>
     <style>
