@@ -1,0 +1,19 @@
+{
+  "name": "the_global_redirect",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aditya-Tech/The-Global-Redirect.git"
+  },
+  "author": "Aditya Paruchuri",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Aditya-Tech/The-Global-Redirect/issues"
+  },
+  "homepage": "https://github.com/Aditya-Tech/The-Global-Redirect#readme"
+}
