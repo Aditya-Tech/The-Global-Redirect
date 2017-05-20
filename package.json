@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Aditya-Tech/The-Global-Redirect/issues"
   },
-  "homepage": "https://github.com/Aditya-Tech/The-Global-Redirect#readme"
+  "homepage": "https://github.com/Aditya-Tech/The-Global-Redirect#readme",
+  "dependencies": {
+    "socket-io": "^1.0.0"
+  }
 }
