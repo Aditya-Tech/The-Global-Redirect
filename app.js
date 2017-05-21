@@ -10,139 +10,88 @@ var path = require('path');
 var globe = require("./GlobeController.js");
 
 var NodeGeocoder = require('node-geocoder');
+var feeds = globe.reuters;
 
-//app.set('view engine', 'html');
+getData(feeds);
 
+function getData(feeds) {
 
-app.get('/', function(req, res){
-  //app.use(express.static(path.join(__dirname, './')));
-  // fs.readFile(__dirname + '/index.html', function (err, data) {
-  //    if (err) {
-  //      res.writeHead(500);
-  //      return res.end('Error loading index.html');
-  //    }
-  //
-  //    res.writeHead(200);
-  //    res.end(data);
-  //  });
+  var titles = [];
+  var links = [];
+  var locations = [];
 
+  feeds.forEach(function(feed) {
+    request(feed, function(error, response, html){
 
+        if (!error) {
 
-  var worldFeed = globe.worldFeed;
-  var artsFeed = globe.artsFeed;
-
-  request(worldFeed, function(error, response, html){
-
-      if(!error){
           var $ = cheerio.load(html);
 
-      // var title, release, rating;
-      // var json = { title : "", release : "", rating : ""};
-      //
-      // $('.el-editorial-source').filter(function(){
-      //     var data = $(this);
-      //     title = data.text();
-      //     release = data.children().last().children().text();
-      //
-      //     json.title = title;
-      //     json.release = release;
-      // })
-      //
-      // $('.star-box-giga-star').filter(function(){
-      //     var data = $(this);
-      //     rating = data.text();
-      //
-      //     json.rating = rating;
-      // })
+          var tempTitles = [];
+          var tempLinks = [];
+          var tempLocs = [];
 
-      var options = {
-        provider: 'google'
-      };
 
-      var geocoder = NodeGeocoder(options);
+          $('title').each(function(i, elem) {
+            tempTitles[i] = $(this).text() + "\n"
+          });
 
-      var titles = [];
-      var links = [];
-      var locations = [];
+          tempTitles.shift();
+          tempTitles.shift();
 
-      $('title').each(function(i, elem) {
-        titles[i] = $(this).text() + "\n"
-      });
+          $('description').each(function(i, elem) {
+            tempLocs[i] = $(this).text().slice(0, $(this).text().indexOf("(Reuters)"));
 
-      titles.shift();
-      titles.shift();
+            if (tempLocs[i].indexOf('/') > -1) {
+              tempLocs[i] = tempLocs[i].slice(0, tempLocs[i].indexOf('/'));
+            };
+          });
 
-      $('description').each(function(i, elem) {
-        locations[i] = $(this).text().slice(0, $(this).text().indexOf("(Reuters)"));
-        if (locations[i].indexOf('/') > -1) {
-          locations[i] = locations[i].slice(0, locations[i].indexOf('/'));
+          tempLocs.shift();
+
+          $('guid').each(function(i, elem) {
+            tempLinks.push($(this).text());
+          });
+
+
+
+          console.log(tempTitles.length);
+          console.log(tempLocs.length);
+          console.log(tempLinks.length);
+
+          titles.push(tempTitles);
+          links.push(tempLinks);
+          locations.push(tempLocs);
+
+          if (titles.length == 3) {
+            var toClient = {
+              titles: titles,
+              links: links,
+              locations: locations
+            }
+
+            return setData(toClient);
+
+          };
         };
       });
+    })
 
-      locations.shift();
+}
 
-      locations.forEach(function(value){
-        geocoder.geocode(value, function(err, res) {
-          console.log(value)
-          if (res == null) {
-            locations.indexOf[value] = null
-          } else {
-            locations.indexOf[value] = [res[0].latitude, res[0].longitude]
-          }
-      });
-      //return res.render('index')
+app.set('views', path.join(__dirname, '/'));
+app.set('view engine', 'jade');
 
-    });
+function setData(data) {
+  app.get('/', function(req, res){
+    res.render('scratchwork', {data:data});
 
-
-
-
-
-      // for (var i = 0; i < locations.length; i++) {
-      //   var temp = [];
-      //   var current = locations[i];
-      //
-      //   geocoder.geocode(current, function(err, res) {
-      //     console.log(current)
-      //     // if (res != undefined) {
-      //     //   temp.push(res[0].latitude);
-      //     //   temp.push(res[0].longitude);
-      //     // } else {
-      //     //   console.log(locations[i] + " is undefined");
-      //     // }
-      //
-      //   })
-      //
-      //   // locations[i] = temp;
-      //
-      // }
-
-
-      $("link").each(function(i, elem) {
-        links[i] = $(this).text();
-      });
-
-      links.shift();
-      links.shift();
-
-      console.log(titles.length);
-      console.log(locations.length);
-      console.log(links.length);
-      console.log(locations);
-
-      var toClient = {
-        titles: titles,
-        links: links,
-        locations: locations
-      }
-
-      //eturn res.send(toClient)
-
-    }
 
   });
-  return res.sendFile(path.join(__dirname + '/index.html'));
-});
+
+}
+
+
 
 
 app.listen('3000')

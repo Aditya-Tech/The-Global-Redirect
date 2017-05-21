@@ -16,48 +16,46 @@
 
     <script src="http://www.webglearth.com/v2/api.js"></script>
     <script>
-      function initialize() {
+    function initialize() {
 
-        $.get('http://localhost:3000/', {}, function(data){
-          console.log(data)
-        });
-        var options = {atmosphere: true, center: [0, 0], zoom: 3};
-        var earth = new WE.map('earth_div', options);
-        WE.tileLayer('http://tileserver.maptiler.com/nasa/{z}/{x}/{y}.jpg', {
-          minZoom: 0,
-          maxZoom: 5,
-          attribution: 'NASA'
-        }).addTo(earth);
+    var myData = !{JSON.stringify(data)};
+    alert(myData.titles[0]);
 
+    //-
+    //- var d = {
+    //-   titles: myData.titles,
+    //-   locations: myData.locations,
+    //-   links: myData.links
+    //- }
+    var markers = [];
 
-        var markers = [WE.marker([51.5, -0.09]).addTo(earth), WE.marker([30.058056, 31.228889]).addTo(earth), WE.marker([51.6, -0.09]).addTo(earth)];
+    for (var i = 0; i < myData.locations.length; i++) {
+      var curLoc = myData.locations[i];
+      markers.push(WE.marker([curLoc[0], curLoc[1]]).addTo(earth));
+    }
 
-        for (var i = 0; i < markers.length; i++) {
-          markers[i].bindPopup("<b>Hello world!</b><br>I am a popup.<br /><span style='font-size:10px;color:#999'>Tip: Another popup is hidden in Cairo..</span>", {maxWidth: 150, closeButton: true}).openPopup();
-        }
-        // Start a simple rotation animation
-        var before = null;
-        var shouldAnimate = true;
+    var options = {atmosphere: true, center: [0, 0], zoom: 3};
+    var earth = new WE.map('earth_div', options);
 
+    WE.tileLayer('http://tileserver.maptiler.com/nasa/{z}/{x}/{y}.jpg', {
+      minZoom: 0,
+      maxZoom: 5,
+      attribution: 'NASA'
+    }).addTo(earth);
 
-          $('#toggle-event').change(function() {
-            if ($(this).prop('checked')) {
-              shouldAnimate = true;
-            } else {
-              shouldAnimate = false;
-            }
-          })
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].bindPopup("<b>Hello world!</b><br>I am a popup.<br /><span style='font-size:10px;color:#999'>Tip: Another popup is hidden in Cairo..</span>", {maxWidth: 150, closeButton: true}).openPopup();
+    }
+    // Start a simple rotation animation
+    var before = null;
 
-        //
-        // requestAnimationFrame(function animate(now) {
-        //   var c = earth.getPosition();
-        //   var elapsed = before? now - before: 0;
-        //   before = now;
-        //   earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
-        //   requestAnimationFrame(animate);
-        //
-        //
-        // });
+    requestAnimationFrame(function animate(now) {
+      var c = earth.getPosition();
+      var elapsed = before? now - before: 0;
+      before = now;
+      earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
+      requestAnimationFrame(animate);
+    });}
       }
     </script>
     <style>

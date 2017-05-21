@@ -1,0 +1,102 @@
+doctype html
+html
+  head
+    // Latest compiled and minified CSS
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    // jQuery library
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js')
+    // <script src="app.js"></script>
+    script(type='text/javascript', src='GlobeController.js')
+    // Latest compiled JavaScript
+    link(href='https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css', rel='stylesheet')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+    script(src='https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js')
+    script(src='http://www.webglearth.com/v2/api.js')
+    script.
+      function initialize() {
+        var myData = !{JSON.stringify(data)};
+        
+        var titles = myData.titles;
+        var cityNames = myData.locations;
+        var links = myData.links;
+      
+        var locations = [];
+        var markers = [];
+        
+        setMarkers();
+        
+        
+        function setMarkers() {
+          
+          var count1 = 0;
+
+          cityNames.forEach(function(i) {
+            var count2 = 0;
+
+            i.forEach(function(j) {
+              var city = j;
+              var temp = [];
+              
+              $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+encodeURIComponent(city), function(val) {
+            
+                if (val.results.length) {
+                  
+                  console.log(val.results)
+                  var location = val.results[0].geometry.location;
+                  
+                  //console.log(titles[count]);
+                  WE.marker([location.lat, location.lng]).addTo(earth).bindPopup("<b>" + myData.titles[count1][count2] + "</b><br>" + val.results[0].formatted_address +"<br /><span style='font-size:10px;color:#999'><a href=" + myData.links[count1][count2] + " target='_blank'>View Full Article</a>"  + "</span>", {maxWidth: 300, closeButton: true}).closePopup();
+                  count2++;
+
+                } else {
+                  locations.push(null);
+                }
+              })
+              
+            })
+
+          })
+          count1++;
+        }
+
+    
+      
+      
+        var options = {atmosphere: true, center: [0, 0], zoom: 3};
+        var earth = new WE.map('earth_div', options);
+        
+        WE.tileLayer('http://tileserver.maptiler.com/nasa/{z}/{x}/{y}.jpg', {
+          minZoom: 0,
+          maxZoom: 5,
+          attribution: 'NASA'
+        }).addTo(earth);
+        
+        //- function setMarkers() {
+        //-   var len = markers.length;
+        //-   for (var i = 0; i < len; i++) {
+        //-     markers[i].bindPopup("<b>Hello world!</b><br>I am a popup.<br /><span style='font-size:10px;color:#999'>Tip: Another popup is hidden in Cairo..</span>", {maxWidth: 150, closeButton: true}).openPopup();
+        //-   }
+        //- }
+        
+        //console.log(markers.length)
+        // Start a simple rotation animation
+        var before = null;
+        
+        requestAnimationFrame(function animate(now) {
+          var c = earth.getPosition();
+          var elapsed = before? now - before: 0;
+          before = now;
+          earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
+          requestAnimationFrame(animate);
+        });
+      }
+    style.
+      html, body{padding: 0; margin: 0; background-color: black;}
+      #earth_div{ top: 0; right: 0; bottom: 0; left: 0; position: absolute !important;}
+    title The Global Redirect
+  body(onload='initialize()')
+    #earth_div
+    div
+      input#toggle-event(type='checkbox', checked='', data-toggle='toggle')
+      h1#debug
+    script(type='text/javascript').
