@@ -31,48 +31,109 @@ function getData(feeds) {
           var tempLinks = [];
           var tempLocs = [];
 
-
-          $('title').each(function(i, elem) {
-            tempTitles[i] = $(this).text() + "\n"
-          });
-
-          tempTitles.shift();
-          tempTitles.shift();
-
-          $('description').each(function(i, elem) {
-            tempLocs[i] = $(this).text().slice(0, $(this).text().indexOf("(Reuters)"));
-
-            if (tempLocs[i].indexOf('/') > -1) {
-              tempLocs[i] = tempLocs[i].slice(0, tempLocs[i].indexOf('/'));
-            };
-          });
-
-          tempLocs.shift();
-
-          $('guid').each(function(i, elem) {
-            tempLinks.push($(this).text());
-          });
+          if (feed.includes("reuters.com")) {
 
 
+            $('title').each(function(i, elem) {
+              tempTitles[i] = $(this).text() + "\n"
+            });
 
-          console.log(tempTitles.length);
-          console.log(tempLocs.length);
-          console.log(tempLinks.length);
+            tempTitles.shift();
+            tempTitles.shift();
 
-          titles.push(tempTitles);
-          links.push(tempLinks);
-          locations.push(tempLocs);
+            $('description').each(function(i, elem) {
+              tempLocs[i] = $(this).text().slice(0, $(this).text().indexOf("(Reuters)"));
 
-          if (titles.length == 4) {
+              if (tempLocs[i].indexOf('/') > -1) {
+                tempLocs[i] = tempLocs[i].slice(0, tempLocs[i].indexOf('/'));
+              };
+            });
+
+            tempLocs.shift();
+
+            $('guid').each(function(i, elem) {
+              tempLinks.push($(this).text());
+            });
+
+
+
+            console.log(tempTitles.length);
+            console.log(tempLocs.length);
+            console.log(tempLinks.length);
+
+            titles.push(tempTitles);
+            links.push(tempLinks);
+            locations.push(tempLocs);
+
+
+
+            } else if (feed.includes("cnn.com")) {
+                //console.log("CNN feed found");
+
+                
+
+                $('description').each(function(i, elem) {
+                  var tempText = $(this).text();
+
+                  if (tempText.includes('div')) {
+                    tempTitles[i] = tempText.substr(0, tempText.indexOf('<div')) + "\n"
+                  } else {
+                    tempTitles[i] = tempText + "\n"
+                  }
+
+                });
+
+                tempTitles.shift();
+                tempTitles.shift();
+
+                $('guid').each(function(i, elem) {
+                  tempLinks.push($(this).text());
+                });
+
+                tempLinks.shift();
+
+
+
+                //console.log(tempLinks);
+
+                tempLinks.forEach(function(val) {
+                  request(val, function(error, response, html){
+
+                      if (!error) {
+                        //console.log(val)
+                        var $ = cheerio.load(html);
+
+                        //console.log($);
+                        tempLocs.push($('cite').text());
+                        //console.log($('cite').text());
+                      }
+                    });
+                })
+
+                titles.push(tempTitles);
+                links.push(tempLinks);
+                locations.push(tempLocs);
+
+
+              }
+          }
+
+
+
+          if (titles.length == 5) {
             var toClient = {
               titles: titles,
               links: links,
               locations: locations
             }
+            console.log(titles.length);
+            console.log(links.length);
+            console.log(locations.length);
 
             return setData(toClient);
 
-          };
+
+
         };
       });
     })
@@ -84,7 +145,7 @@ app.set('view engine', 'jade');
 
 function setData(data) {
   app.get('/', function(req, res){
-    console.log(data.locations)
+    //console.log(data.locations)
     res.render('scratchwork', {data:data});
 
 
