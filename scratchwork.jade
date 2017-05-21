@@ -1,12 +1,11 @@
-doctype html
 html
   head
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Dancing+Script')
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Roboto')
     // Latest compiled and minified CSS
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
     // jQuery library
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js')
-    // <script src="app.js"></script>
-    script(type='text/javascript', src='GlobeController.js')
     // Latest compiled JavaScript
     link(href='https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css', rel='stylesheet')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
@@ -14,18 +13,20 @@ html
     script(src='http://www.webglearth.com/v2/api.js')
     script.
       function initialize() {
+        
         var myData = !{JSON.stringify(data)};
         
         var titles = myData.titles;
         var cityNames = myData.locations;
         var links = myData.links;
+        
+        //console.log(links)
       
         var locations = [];
         var markers = [];
-        
+        //console.log(titles[2].length)
         setMarkers();
-        
-        
+  
         function setMarkers() {
           
           var count1 = 0;
@@ -38,10 +39,10 @@ html
               var temp = [];
               
               $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+encodeURIComponent(city), function(val) {
-            
+                console.log(count1 + " " + count2)
                 if (val.results.length) {
                   
-                  console.log(val.results)
+                  //console.log(val.results)
                   var location = val.results[0].geometry.location;
                   
                   //console.log(titles[count]);
@@ -49,7 +50,7 @@ html
                   count2++;
 
                 } else {
-                  locations.push(null);
+                  //locations.push(null);
                 }
               })
               
@@ -90,13 +91,230 @@ html
           requestAnimationFrame(animate);
         });
       }
+
     style.
-      html, body{padding: 0; margin: 0; background-color: black;}
-      #earth_div{ top: 0; right: 0; bottom: 0; left: 0; position: absolute !important;}
-    title The Global Redirect
+      html {padding: 0; margin: 0; background-color: black;}
+      body {
+      padding: 0;
+      background-color: black;
+      font-family: Roboto, sans-serif;
+      left: 0;
+      line-height: 1.35;
+      margin: 0;
+      overflow: hidden;
+      position: relative;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      transition: left 0.3s ease-in-out;
+      }
+      body.panel-open {
+      left: -250px;
+      }
+      .container {
+      min-height: 1000px;
+      }
+      a {
+      outline: 0;
+      text-decoration: none;
+      }
+      h1, h2, h3, h4, h5, h6 {
+      margin: 0;
+      padding: 0;
+      }
+      header {
+      color: #fff;
+      padding: 3em 5%;
+      position: relative;
+      width: 110%;
+      z-index: 2;
+      }
+      .menu-toggle {
+      cursor: pointer;
+      float: right;
+      font-size: 0.875rem;
+      transition: all 0.3s ease-in-out;
+      }
+      .menu-toggle.open {
+      opacity: 0.5;
+      }
+      .menu-toggle-grippy {
+      border-bottom: 5px solid #fff;
+      border-top: 5px solid #fff;
+      float: left;
+      line-height: 0;
+      margin-right: 1em;
+      padding: 5px 0;
+      text-indent: -999em;
+      width: 35px;
+      }
+      .menu-toggle-grippy:after {
+      background: #fff;
+      content: "";
+      display: block;
+      height: 5px;
+      }
+      .menu-toggle-label {
+      float: left;
+      font-weight: 700;
+      height: 25px;
+      letter-spacing: 1px;
+      line-height: 25px;
+      text-transform: uppercase;
+      }
+      .hidden-panel {
+      background: #333;
+      color: #666;
+      font-size: 0.875rem;
+      height: 100%;
+      position: absolute;
+      right: -250px;
+      top: 0;
+      width: 250px;
+      }
+      .hidden-panel a {
+      color: #999;
+      transition: color 0.3s ease-out;
+      }
+      .hidden-panel a:hover {
+      color: #fff;
+      }
+      .hidden-panel-close {
+      color: #666;
+      cursor: pointer;
+      position: absolute;
+      right: 20px;
+      top: 3.7em;
+      transition: color 0.3s ease-in-out;
+      }
+      .hidden-panel-close:hover {
+      color: #fff;
+      }
+      .hidden-panel-content {
+      padding: 3.65em 10%;
+      }
+      .hidden-panel-nav {
+      border-bottom: 1px solid #666;
+      border-bottom: 1px solid rgba(102, 102, 102, 0.25);
+      margin-bottom: 1.5em;
+      padding-bottom: 1.5em;
+      text-transform: uppercase;
+      }
+      .hidden-panel-nav h3 {
+      letter-spacing: 1px;
+      margin-bottom: 1em;
+      }
+      .hidden-panel-nav ul {
+      list-style: none;
+      font-weight: 600;
+      margin: 0;
+      padding: 0;
+      }
+      .hidden-panel-nav li {
+      padding: 0.25em 0;
+      }
+      .hidden-panel-text {
+      line-height: 1.5;
+      }
+      .hidden-panel-text p {
+      margin-bottom: 1.5em;
+      }
+      .hidden-panel-text p:last-child {
+      margin-bottom: 0;
+      }
+      .hidden-panel-credits {
+      font-size: 12px;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      }
+      .hidden-panel-credits span {
+      display: block;
+      margin-bottom: 0.15em;
+      }
+      .banner {
+      background: black;
+      box-sizing: border-box;
+      height: 100%;
+      left: 0;
+      padding-bottom:150px;
+      position: absolute;
+      text-align: center;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+      }
+      .banner h1 {
+      color: #fff;
+      font-family: "Dancing Script";
+      font-size: 4.375rem;
+      margin-bottom: 1em;
+      }
+      .banner h2 {
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 300;
+      line-height: 1.5;
+      margin: 0 auto;
+      width: 50%;
+      }
+      .container:before, header:before, .menu-toggle:before, .container:after, header:after, .menu-toggle:after {
+      content: "";
+      display: table;
+      }
+      .container:after, header:after, .menu-toggle:after {
+      clear: both;
+      }
   body(onload='initialize()')
-    #earth_div
-    div
-      input#toggle-event(type='checkbox', checked='', data-toggle='toggle')
-      h1#debug
-    script(type='text/javascript').
+    .container
+      header
+        .menu-toggle(data-js='menu-toggle')
+          span.menu-toggle-grippy Toggle
+          span.menu-toggle-label Menu
+      section.banner(role='banner')
+        #earth_div
+      .hidden-panel
+        span.hidden-panel-close(data-js='hidden-panel-close') Close
+        .hidden-panel-content
+          nav.hidden-panel-nav
+            h3 Quick Look
+            ul
+              li
+                a(href='#', title='Home') Home
+              li
+                a(href='#', title='About') About
+              li
+                a(href='#', title='Blog') Blog
+              li
+                a(href='#', title='Work') Work
+              li
+                a(href='#', title='Contact') Contact
+          .hidden-panel-text
+            p
+              | This is an experimental CodePen which utilises an absolutely positioned hidden panel which can be triggered by clicking a toggle.
+          .hidden-panel-credits
+            span
+              | Coded by 
+              a(href='http://twitter.com/darrenhuskie', title='Darren Huskie') Darren Huskie
+              | .
+            span
+              | Powered by 
+              a(href='#', title='some framework') some framework
+              | .
+            span
+              | Hosted by a 
+              a(href='#', title='web host') web host
+              | .
+    script.
+      var menuToggle = document.querySelector('[data-js="menu-toggle"]');
+      // Clear the interval on any click
+      //- document.body.addEventListener('click', function () {
+      //- clearInterval(interval);
+      //- });
+      menuToggle.addEventListener('click', function () {
+      document.body.classList.toggle('panel-open');
+      menuToggle.classList.toggle('open');
+      });
+      var closePanel = document.querySelector('[data-js="hidden-panel-close"]');
+      closePanel.addEventListener('click', function () {
+      document.body.classList.remove('panel-open');
+      menuToggle.classList.remove('open');
+      });

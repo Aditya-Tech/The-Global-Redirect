@@ -84,9 +84,7 @@ app.set('view engine', 'jade');
 
 function setData(data) {
   app.get('/', function(req, res){
-
-    console.log(data.titles);
-    console.log(data.locations);
+    //console.log(data.titles)
     res.render('scratchwork', {data:data});
 
 
