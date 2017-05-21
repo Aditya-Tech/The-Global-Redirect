@@ -63,7 +63,7 @@ function getData(feeds) {
           links.push(tempLinks);
           locations.push(tempLocs);
 
-          if (titles.length == 3) {
+          if (titles.length == 4) {
             var toClient = {
               titles: titles,
               links: links,
@@ -84,7 +84,7 @@ app.set('view engine', 'jade');
 
 function setData(data) {
   app.get('/', function(req, res){
-    //console.log(data.titles)
+    console.log(data.locations)
     res.render('scratchwork', {data:data});
 
 

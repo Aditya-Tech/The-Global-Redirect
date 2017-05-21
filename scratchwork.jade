@@ -6,6 +6,7 @@ html
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
     // jQuery library
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js')
+    title The Global Redirect
     // Latest compiled JavaScript
     link(href='https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css', rel='stylesheet')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
@@ -13,6 +14,34 @@ html
     script(src='http://www.webglearth.com/v2/api.js')
     script.
       function initialize() {
+        
+        var touchtime = 0;
+        performAnimation()
+        var animated = true;
+        var curNow = 0;
+        
+        var curPos = [];
+        
+        $('#earth_div').on('click', function() {
+          if(touchtime == 0) {
+            touchtime = new Date().getTime();
+          } else {
+            if(((new Date().getTime()) - touchtime) < 200) {
+              if (animated) {
+                animated = false;
+              } else {
+                animated = true;
+                performAnimation()
+              }
+              console.log(animated);
+              //alert(animated);
+              
+              touchtime = 0;
+            } else {
+              touchtime = 0;
+            }
+          } 
+        });
         
         var myData = !{JSON.stringify(data)};
         
@@ -25,39 +54,84 @@ html
         var locations = [];
         var markers = [];
         //console.log(titles[2].length)
-        setMarkers();
-  
-        function setMarkers() {
-          
+        
+        outerLoop();
+        
+        
+        function outerLoop() {
           var count1 = 0;
-
-          cityNames.forEach(function(i) {
+          
+          cityNames.forEach(function(val1, i) {
             var count2 = 0;
-
-            i.forEach(function(j) {
-              var city = j;
-              var temp = [];
-              
-              $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+encodeURIComponent(city), function(val) {
-                console.log(count1 + " " + count2)
-                if (val.results.length) {
-                  
-                  //console.log(val.results)
-                  var location = val.results[0].geometry.location;
-                  
-                  //console.log(titles[count]);
-                  WE.marker([location.lat, location.lng]).addTo(earth).bindPopup("<b>" + myData.titles[count1][count2] + "</b><br>" + val.results[0].formatted_address +"<br /><span style='font-size:10px;color:#999'><a href=" + myData.links[count1][count2] + " target='_blank'>View Full Article</a>"  + "</span>", {maxWidth: 300, closeButton: true}).closePopup();
-                  count2++;
-
-                } else {
-                  //locations.push(null);
-                }
-              })
-              
-            })
-
+            
+            innerLoop(val1, count1, count2, i);
+            count1++;
           })
-          count1++;
+
+        }
+        
+        function innerLoop(curVal, count1, count2, i) {
+          curVal.forEach(function(val2, j) {
+            var city = val2;
+            var temp = [];
+            
+            $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+encodeURIComponent(city), function(val) {
+              //console.log(count1 + " " + count2)
+              if (val.results.length) {
+                
+                //console.log(val.results)
+                var location = val.results[0].geometry.location;
+                console.log(city + ": " + location.lat + " " + location.lng)
+                
+                var curTitle = titles[i][j]
+                var curLink = links[i][j];
+                var curLoc = val.results[0].formatted_address;
+                
+                setMarkers(location.lat + (0.25 * (Math.round(Math.random()) * 2 - 1)), location.lng + (0.25 * (Math.round(Math.random()) * 2 - 1)), curTitle, curLink, curLoc);
+                count2++;
+
+              } else {
+                //locations.push(null);
+              }
+            })
+            
+          })
+        }
+  
+        function setMarkers(lat, lng, ct, cl, cLoc) {
+          
+          WE.marker([lat, lng]).addTo(earth).bindPopup("<b>" + ct + "</b><br>" + cLoc +"<br /><span style='font-size:10px;color:#999'><a href=" + cl + " target='_blank'>View Full Article</a>"  + "</span>", {maxWidth: 300, closeButton: true}).closePopup();
+          
+          
+          //- var count1 = 0;
+          //- 
+          //- cityNames.forEach(function(i) {
+          //-   var count2 = 0;
+          //- 
+          //-   i.forEach(function(j) {
+          //-     var city = j;
+          //-     var temp = [];
+          //-     
+          //-     $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+encodeURIComponent(city), function(val) {
+          //-       console.log(count1 + " " + count2)
+          //-       if (val.results.length) {
+          //-         
+          //-         //console.log(val.results)
+          //-         var location = val.results[0].geometry.location;
+          //-         console.log(city + ": " + location.lat + " " + location.lng)
+          //-         //console.log(titles[count]);
+          //-         WE.marker([location.lat, location.lng]).addTo(earth).bindPopup("<b>" + myData.titles[count1][count2] + "</b><br>" + val.results[0].formatted_address +"<br /><span style='font-size:10px;color:#999'><a href=" + myData.links[count1][count2] + " target='_blank'>View Full Article</a>"  + "</span>", {maxWidth: 300, closeButton: true}).closePopup();
+          //-         count2++;
+          //- 
+          //-       } else {
+          //-         //locations.push(null);
+          //-       }
+          //-     })
+          //-     
+          //-   })
+          //- 
+          //- })
+          //- count1++;
         }
 
     
@@ -83,13 +157,20 @@ html
         // Start a simple rotation animation
         var before = null;
         
-        requestAnimationFrame(function animate(now) {
-          var c = earth.getPosition();
-          var elapsed = before? now - before: 0;
-          before = now;
-          earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
-          requestAnimationFrame(animate);
-        });
+        function performAnimation() {
+          requestAnimationFrame(function animate(now) {
+            if (animated) {
+              var c = earth.getPosition();
+              var elapsed = before? now - before: 0;
+              before = now;
+              earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
+              requestAnimationFrame(animate);
+            }
+            
+            
+          });
+        }
+        
       }
 
     style.
@@ -275,7 +356,8 @@ html
         span.hidden-panel-close(data-js='hidden-panel-close') Close
         .hidden-panel-content
           nav.hidden-panel-nav
-            h3 Quick Look
+            a(href='http://tinypic.com?ref=2hn705v', target='_blank')
+            img(src='http://i67.tinypic.com/2hn705v.png', border='0', alt='Image and video hosting by TinyPic', style="padding-left:25x;")
             ul
               li
                 a(href='#', title='Home') Home
