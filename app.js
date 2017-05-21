@@ -57,9 +57,9 @@ function getData(feeds) {
 
 
 
-            console.log(tempTitles.length);
-            console.log(tempLocs.length);
-            console.log(tempLinks.length);
+            // console.log(tempTitles.length);
+            // console.log(tempLocs.length);
+            // console.log(tempLinks.length);
 
             titles.push(tempTitles);
             links.push(tempLinks);
@@ -70,7 +70,7 @@ function getData(feeds) {
             } else if (feed.includes("cnn.com")) {
                 //console.log("CNN feed found");
 
-                
+
 
                 $('description').each(function(i, elem) {
                   var tempText = $(this).text();
@@ -126,9 +126,10 @@ function getData(feeds) {
               links: links,
               locations: locations
             }
-            console.log(titles.length);
-            console.log(links.length);
-            console.log(locations.length);
+            console.log(titles[3][0])
+            console.log(titles[4].length);
+            console.log(links[4].length);
+            console.log(locations[4].length);
 
             return setData(toClient);
 

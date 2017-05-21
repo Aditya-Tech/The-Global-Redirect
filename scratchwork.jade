@@ -295,6 +295,14 @@ html
       }
       .hidden-panel-text {
       line-height: 1.5;
+
+      }
+      .titles-display {
+        // width: 1000px;
+       overflow-y:scroll; 
+       position:relative;
+       height: 1000px;
+
       }
       .hidden-panel-text p {
       margin-bottom: 1.5em;
@@ -353,38 +361,59 @@ html
       section.banner(role='banner')
         #earth_div
       .hidden-panel
-        span.hidden-panel-close(data-js='hidden-panel-close') Close
+        span.hidden-panel-close(data-js='hidden-panel-close' style="font-size:10px;") Close
         .hidden-panel-content
           nav.hidden-panel-nav
-            a(href='http://tinypic.com?ref=2hn705v', target='_blank')
-            img(src='http://i67.tinypic.com/2hn705v.png', border='0', alt='Image and video hosting by TinyPic', style="padding-left:25x;")
-            ul
-              li
-                a(href='#', title='Home') Home
-              li
-                a(href='#', title='About') About
-              li
-                a(href='#', title='Blog') Blog
-              li
-                a(href='#', title='Work') Work
-              li
-                a(href='#', title='Contact') Contact
+            a(href='http://tinypic.com?ref=i5vzx1', target='_blank')
+            img(src='http://i63.tinypic.com/i5vzx1.png', border='0', alt='Image and video hosting by TinyPic', style="padding-left:15px; padding-right:5px;")
+            //- ul
+            //-   li
+            //-     a(href='#', title='Home') Home
+            //-   li
+            //-     a(href='#', title='About') About
+            //-   li
+            //-     a(href='#', title='Blog') Blog
+            //-   li
+            //-     a(href='#', title='Work') Work
+            //-   li
+            //-     a(href='#', title='Contact') Contact
           .hidden-panel-text
-            p
-              | This is an experimental CodePen which utilises an absolutely positioned hidden panel which can be triggered by clicking a toggle.
-          .hidden-panel-credits
-            span
-              | Coded by 
-              a(href='http://twitter.com/darrenhuskie', title='Darren Huskie') Darren Huskie
-              | .
-            span
-              | Powered by 
-              a(href='#', title='some framework') some framework
-              | .
-            span
-              | Hosted by a 
-              a(href='#', title='web host') web host
-              | .
+            h4(style="color:#009966; font-style: italic; font-weight:bold;")
+              | Welcome to The Global Redirect! Explore what's happening around the globe by using the simplest, most elegant news interface ever created.
+              br
+              br
+            p(style="color:#D2B48C; font-size:13px;")
+              | Double-click the globe to pause the animation. Clicking on 'View Full Article' will open a new tab with the selected article in display.
+            //- .titles-display
+            //-   -each i in data.titles
+            //-     -each j in i
+            //-       p= j
+            
+            .titles-display
+              - each v, i in data.titles
+                -each w, j in v
+                  a(href=data.links[i][j] style="font-size:12px;" target='_blank')= w
+                  br
+                  br
+                  
+                  
+            //- -var cityNames = myData.locations;
+            //- -var links = myData.links;
+            //- -each i in titles
+            //-   p
+            //-     | i
+            //- span
+            //-   | Coded by 
+            //-   a(href='http://twitter.com/darrenhuskie', title='Darren Huskie') Darren Huskie
+            //-   | .
+            //- span
+            //-   | Powered by 
+            //-   a(href='#', title='some framework') some framework
+            //-   | .
+            //- span
+            //-   | Hosted by a 
+            //-   a(href='#', title='web host') web host
+            //-   | .
     script.
       var menuToggle = document.querySelector('[data-js="menu-toggle"]');
       // Clear the interval on any click
