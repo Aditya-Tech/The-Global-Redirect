@@ -81,13 +81,13 @@ html
                 
                 //console.log(val.results)
                 var location = val.results[0].geometry.location;
-                console.log(city + ": " + location.lat + " " + location.lng)
+                //console.log(city + ": " + location.lat + " " + location.lng)
                 
                 var curTitle = titles[i][j]
                 var curLink = links[i][j];
                 var curLoc = val.results[0].formatted_address;
                 
-                setMarkers(location.lat + (0.25 * (Math.round(Math.random()) * 2 - 1)), location.lng + (0.25 * (Math.round(Math.random()) * 2 - 1)), curTitle, curLink, curLoc);
+                setMarkers(location.lat + (Math.random() * (Math.round(Math.random()) * 2 - 1)), location.lng + (0.25 * (Math.round(Math.random()) * 2 - 1)), curTitle, curLink, curLoc);
                 count2++;
 
               } else {
@@ -134,7 +134,6 @@ html
           //- count1++;
         }
 
-    
       
       
         var options = {atmosphere: true, center: [0, 0], zoom: 2};
@@ -324,7 +323,7 @@ html
       box-sizing: border-box;
       height: 100%;
       left: 0;
-      padding-bottom:280px;
+      padding-bottom:200px;
       position: absolute;
       text-align: center;
       top: 0;

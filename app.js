@@ -120,13 +120,13 @@ function getData(feeds) {
 
 
 
-          if (titles.length == 5) {
+          if (titles.length == 7) {
             var toClient = {
               titles: titles,
               links: links,
               locations: locations
             }
-            console.log(titles[3][0])
+            //console.log(titles[3][0])
             console.log(titles[4].length);
             console.log(links[4].length);
             console.log(locations[4].length);
