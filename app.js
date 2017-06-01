@@ -157,5 +157,5 @@ function setData(data) {
 
 
 
-app.listen('3000')
-console.log('Check port 3000!')
+app.listen(process.env.PORT || 5000)
+console.log('Check port 5000!')
