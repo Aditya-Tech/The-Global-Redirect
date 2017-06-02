@@ -170,6 +170,8 @@ html
           });
         }
         
+        
+        
       }
 
     style.
@@ -300,7 +302,7 @@ html
         // width: 1000px;
        overflow-y:scroll; 
        position:relative;
-       height: 1000px;
+       height: 300px;
 
       }
       .hidden-panel-text p {
@@ -351,6 +353,16 @@ html
       .container:after, header:after, .menu-toggle:after {
       clear: both;
       }
+      
+      #myInput {
+        width: 200px; 
+        height: 10px
+        font-size: 16px;
+        //- padding: 12px 20px 12px 40px;
+        border: 1px solid #ddd; 
+        margin-bottom: 12px;
+      }
+      
   body(onload='initialize()')
     .container
       header
@@ -387,13 +399,37 @@ html
             //-   -each i in data.titles
             //-     -each j in i
             //-       p= j
-            
+            input#myInput(type='text', onkeyup='searchList()', placeholder='Search for names..')
+            script.
+              function searchList() {
+                  // Declare variables
+                  var input, filter, ul, li, a, i;
+                  input = document.getElementById('myInput');
+                  filter = input.value.toUpperCase();
+                  ul = document.getElementById("newsList");
+                  li = ul.getElementsByTagName('li');
+
+                  // Loop through all list items, and hide those who don't match the search query
+                  for (i = 0; i < li.length; i++) {
+                      a = li[i].getElementsByTagName("a")[0];
+                      if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                          li[i].style.display = "";
+                      } else {
+                          li[i].style.display = "none";
+                      }
+                  }
+              }
+
             .titles-display
-              - each v, i in data.titles
-                -each w, j in v
-                  a(href=data.links[i][j] style="font-size:12px;" target='_blank')= w
-                  br
-                  br
+              ul#newsList(style="list-style: none; padding: 0;")
+                - each v, i in data.titles
+                  -each w, j in v
+                    -if (w.trim().length > 0)
+                      li
+                        a(href=data.links[i][j] style="font-size:12px;" target='_blank')= w
+                      p
+                        | ________________________________________
+              
                   
                   
             //- -var cityNames = myData.locations;
