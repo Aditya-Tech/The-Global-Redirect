@@ -49,9 +49,10 @@ html
             if(((new Date().getTime()) - touchtime) < 200) {
               if (animated) {
                 animated = false;
+                $('#animToggle').prop('checked', false).change();
               } else {
                 animated = true;
-                
+                $('#animToggle').prop('checked', true).change();
                 dontAllowTimeElapse = true;
                 performAnimation()
               }
@@ -329,7 +330,7 @@ html
         // width: 1000px;
        overflow-y:scroll; 
        position:relative;
-       height: 300px;
+       height: 260px;
 
       }
       .hidden-panel-text p {
@@ -390,8 +391,17 @@ html
         margin-bottom: 12px;
       }
       
-      #animToggle {
-        size:100px;
+      #animBox {
+      margin-bottom:10px
+      }
+      #animDesc {
+        padding-top:4px;
+        padding-bottom:4px;
+        font-size:8pt;
+        color:white;
+      }
+      .row {
+        padding-bottom:10px;
       }
   body(onload='initialize()')
     .container
@@ -429,8 +439,11 @@ html
             //-   -each i in data.titles
             //-     -each j in i
             //-       p= j
-            input#animToggle(checked='', type='checkbox')
-            input#myInput(type='text', onkeyup='searchList()', placeholder='Search for names..')
+            .row
+              #animDesc.col-xs-3 Toggle Animation
+              .col-xs-3
+                input#animToggle(checked='', type='checkbox')
+            input#myInput(type='text', onkeyup='searchList()', placeholder='Search for articles..')
             script.
               function searchList() {
                   // Declare variables
@@ -458,8 +471,8 @@ html
                     -if (w.trim().length > 0)
                       li
                         a(href=data.links[i][j] style="font-size:12px;" target='_blank')= w
-                      p
-                        | ________________________________________
+                        p
+                          | _____________________________________________
               
                   
                   
