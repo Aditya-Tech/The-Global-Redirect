@@ -12,10 +12,11 @@ html
     script(src='https://www.webglearth.com/v2/api.js')
     link(href='https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css', rel='stylesheet')
     script(src='https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js')
+    link(rel='stylesheet', href='/style.css')
+
 
     script.
       function initialize() {
-        
         
         var animated = true;
         var dontAllowTimeElapse = false;
@@ -37,6 +38,8 @@ html
               performAnimation()
             } else {
               animated = false;
+              panTo()
+
 
             }
           })
@@ -98,65 +101,40 @@ html
             var city = val2;
             var temp = [];
             
-            $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+encodeURIComponent(city), function(val) {
-              //console.log(count1 + " " + count2)
-              if (val.results.length) {
-                
-                //console.log(val.results)
-                var location = val.results[0].geometry.location;
-                //console.log(city + ": " + location.lat + " " + location.lng)
-                
-                var curTitle = titles[i][j]
-                var curLink = links[i][j];
-                var curLoc = val.results[0].formatted_address;
-                
-                setMarkers(location.lat + (Math.random() * (Math.round(Math.random()) * 2 - 1)), location.lng + (0.25 * (Math.round(Math.random()) * 2 - 1)), curTitle, curLink, curLoc);
-                count2++;
+            if (isProperCity(city, titles[i][j], links[i][j])) {
+              $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+encodeURIComponent(city), function(val) {
+                //console.log(count1 + " " + count2)
+                if (val.results.length) {
+                  
+                  //console.log(val.results)
+                  var location = val.results[0].geometry.location;
+                  //console.log(city + ": " + location.lat + " " + location.lng)
+                  
+                  var curTitle = titles[i][j]
+                  var curLink = links[i][j];
+                  var curLoc = val.results[0].formatted_address;
+                  
+                  setMarkers(location.lat + (Math.random() * (Math.round(Math.random()) * 2 - 1)), location.lng + (0.25 * (Math.round(Math.random()) * 2 - 1)), curTitle, curLink, curLoc);
+                  count2++;
 
-              } else {
-                //locations.push(null);
-              }
-            })
-            
+                } else {
+                  //locations.push(null);
+                }
+              })
+            }
           })
         }
   
         function setMarkers(lat, lng, ct, cl, cLoc) {
-          
           WE.marker([lat, lng]).addTo(earth).bindPopup("<b>" + ct + "</b><br>" + cLoc +"<br /><span style='font-size:10px;color:#999'><a href=" + cl + " target='_blank'>View Full Article</a>"  + "</span>", {maxWidth: 300, closeButton: true}).closePopup();
-          
-          
-          //- var count1 = 0;
-          //- 
-          //- cityNames.forEach(function(i) {
-          //-   var count2 = 0;
-          //- 
-          //-   i.forEach(function(j) {
-          //-     var city = j;
-          //-     var temp = [];
-          //-     
-          //-     $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+encodeURIComponent(city), function(val) {
-          //-       console.log(count1 + " " + count2)
-          //-       if (val.results.length) {
-          //-         
-          //-         //console.log(val.results)
-          //-         var location = val.results[0].geometry.location;
-          //-         console.log(city + ": " + location.lat + " " + location.lng)
-          //-         //console.log(titles[count]);
-          //-         WE.marker([location.lat, location.lng]).addTo(earth).bindPopup("<b>" + myData.titles[count1][count2] + "</b><br>" + val.results[0].formatted_address +"<br /><span style='font-size:10px;color:#999'><a href=" + myData.links[count1][count2] + " target='_blank'>View Full Article</a>"  + "</span>", {maxWidth: 300, closeButton: true}).closePopup();
-          //-         count2++;
-          //- 
-          //-       } else {
-          //-         //locations.push(null);
-          //-       }
-          //-     })
-          //-     
-          //-   })
-          //- 
-          //- })
-          //- count1++;
         }
 
+        function isProperCity(city, title, link) {
+          if (city.trim() == '' || city.trim().includes("CNN") || title.trim() == '' || link.trim == '') {
+            return false
+          }
+          return true;
+        }
       
       
         var options = {atmosphere: true, center: [0, 0], zoom: 2};
@@ -178,7 +156,6 @@ html
         //console.log(markers.length)
         // Start a simple rotation animation
         var before = null;
-        
         function performAnimation() {
           requestAnimationFrame(function animate(now) {
             if (animated) {
@@ -187,6 +164,7 @@ html
               if (dontAllowTimeElapse) {
                 elapsed = 0;
               }
+
               before = now;
               earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
               dontAllowTimeElapse = false;
@@ -197,212 +175,19 @@ html
           });
         }
         
+        function panTo() {
+          earth.panTo([65, 17])
+          zoomIn()
+        }
+        
+        function zoomIn() {
+          alert(earth.getSize())
+        }
         
         
+        
       }
 
-    style.
-      
-      html {padding: 0; margin: 0; background-color: black;}
-      body {
-      padding: 0;
-      background-color: black;
-      font-family: Roboto, sans-serif;
-      left: 0;
-      line-height: 1.35;
-      margin: 0;
-      overflow: hidden;
-      position: relative;
-      text-rendering: optimizeLegibility;
-      -webkit-font-smoothing: antialiased;
-      transition: left 0.3s ease-in-out;
-      }
-      body.panel-open {
-      left: -250px;
-      }
-      .container {
-      min-height: 1000px;
-      }
-      a {
-      outline: 0;
-      text-decoration: none;
-      }
-      h1, h2, h3, h4, h5, h6 {
-      margin: 0;
-      padding: 0;
-      }
-      header {
-      color: #fff;
-      padding: 3em 5%;
-      position: relative;
-      width: 110%;
-      z-index: 2;
-      }
-      .menu-toggle {
-      cursor: pointer;
-      float: right;
-      font-size: 0.875rem;
-      transition: all 0.3s ease-in-out;
-      }
-      .menu-toggle.open {
-      opacity: 0.5;
-      }
-      .menu-toggle-grippy {
-      border-bottom: 5px solid #fff;
-      border-top: 5px solid #fff;
-      float: left;
-      line-height: 0;
-      margin-right: 1em;
-      padding: 5px 0;
-      text-indent: -999em;
-      width: 35px;
-      }
-      .menu-toggle-grippy:after {
-      background: #fff;
-      content: "";
-      display: block;
-      height: 5px;
-      }
-      .menu-toggle-label {
-      float: left;
-      font-weight: 700;
-      height: 25px;
-      letter-spacing: 1px;
-      line-height: 25px;
-      text-transform: uppercase;
-      }
-      .hidden-panel {
-      background: #333;
-      color: #666;
-      font-size: 0.875rem;
-      height: 100%;
-      position: absolute;
-      right: -250px;
-      top: 0;
-      width: 250px;
-      }
-      .hidden-panel a {
-      color: #999;
-      transition: color 0.3s ease-out;
-      }
-      .hidden-panel a:hover {
-      color: #fff;
-      }
-      .hidden-panel-close {
-      color: #666;
-      cursor: pointer;
-      position: absolute;
-      right: 20px;
-      top: 3.7em;
-      transition: color 0.3s ease-in-out;
-      }
-      .hidden-panel-close:hover {
-      color: #fff;
-      }
-      .hidden-panel-content {
-      padding: 3.65em 10%;
-      }
-      .hidden-panel-nav {
-      border-bottom: 1px solid #666;
-      border-bottom: 1px solid rgba(102, 102, 102, 0.25);
-      margin-bottom: 1.5em;
-      padding-bottom: 1.5em;
-      text-transform: uppercase;
-      }
-      .hidden-panel-nav h3 {
-      letter-spacing: 1px;
-      margin-bottom: 1em;
-      }
-      .hidden-panel-nav ul {
-      list-style: none;
-      font-weight: 600;
-      margin: 0;
-      padding: 0;
-      }
-      .hidden-panel-nav li {
-      padding: 0.25em 0;
-      }
-      .hidden-panel-text {
-      line-height: 1.5;
-
-      }
-      .titles-display {
-        // width: 1000px;
-       overflow-y:scroll; 
-       position:relative;
-       height: 260px;
-
-      }
-      .hidden-panel-text p {
-      margin-bottom: 1.5em;
-      }
-      .hidden-panel-text p:last-child {
-      margin-bottom: 0;
-      }
-      .hidden-panel-credits {
-      font-size: 12px;
-      font-size: 0.75rem;
-      line-height: 1.5;
-      }
-      .hidden-panel-credits span {
-      display: block;
-      margin-bottom: 0.15em;
-      }
-      .banner {
-      background: black;
-      box-sizing: border-box;
-      height: 100%;
-      left: 0;
-      padding-bottom:200px;
-      position: absolute;
-      text-align: center;
-      top: 0;
-      width: 100%;
-      z-index: 1;
-      }
-      .banner h1 {
-      color: #fff;
-      font-family: "Dancing Script";
-      font-size: 4.375rem;
-      margin-bottom: 1em;
-      }
-      .banner h2 {
-      color: #fff;
-      font-size: 2rem;
-      font-weight: 300;
-      line-height: 1.5;
-      margin: 0 auto;
-      width: 50%;
-      }
-      .container:before, header:before, .menu-toggle:before, .container:after, header:after, .menu-toggle:after {
-      content: "";
-      display: table;
-      }
-      .container:after, header:after, .menu-toggle:after {
-      clear: both;
-      }
-      
-      #myInput {
-        width: 200px; 
-        height: 10px
-        font-size: 16px;
-        //- padding: 12px 20px 12px 40px;
-        border: 1px solid #ddd; 
-        margin-bottom: 12px;
-      }
-      
-      #animBox {
-      margin-bottom:10px
-      }
-      #animDesc {
-        padding-top:4px;
-        padding-bottom:4px;
-        font-size:8pt;
-        color:white;
-      }
-      .row {
-        padding-bottom:10px;
-      }
   body(onload='initialize()')
     .container
       header
@@ -411,23 +196,15 @@ html
           span.menu-toggle-label Menu
       section.banner(role='banner')
         #earth_div
+
+
       .hidden-panel
         span.hidden-panel-close(data-js='hidden-panel-close' style="font-size:10px;") Close
         .hidden-panel-content
           nav.hidden-panel-nav
             a(href='http://tinypic.com?ref=i5vzx1', target='_blank')
             img(src='http://i63.tinypic.com/i5vzx1.png', border='0', alt='Image and video hosting by TinyPic', style="padding-left:15px; padding-right:5px;")
-            //- ul
-            //-   li
-            //-     a(href='#', title='Home') Home
-            //-   li
-            //-     a(href='#', title='About') About
-            //-   li
-            //-     a(href='#', title='Blog') Blog
-            //-   li
-            //-     a(href='#', title='Work') Work
-            //-   li
-            //-     a(href='#', title='Contact') Contact
+
           .hidden-panel-text
             h4(style="color:#009966; font-style: italic; font-weight:bold;")
               | Welcome to The Global Redirect! Explore what's happening around the globe by using the simplest, most elegant news interface ever created.
@@ -435,15 +212,11 @@ html
               br
             p(style="color:#D2B48C; font-size:13px;")
               | Double-click the globe to pause the animation. Clicking on 'View Full Article' will open a new tab with the selected article in display.
-            //- .titles-display
-            //-   -each i in data.titles
-            //-     -each j in i
-            //-       p= j
             .row
               #animDesc.col-xs-3 Toggle Animation
               .col-xs-3
                 input#animToggle(checked='', type='checkbox')
-            input#myInput(type='text', onkeyup='searchList()', placeholder='Search for articles..')
+            input#myInput(type='text', onkeyup='searchList();', placeholder='Search for articles..')
             script.
               function searchList() {
                   // Declare variables
@@ -463,7 +236,6 @@ html
                       }
                   }
               }
-
             .titles-display
               ul#newsList(style="list-style: none; padding: 0;")
                 - each v, i in data.titles
@@ -508,3 +280,229 @@ html
       document.body.classList.remove('panel-open');
       menuToggle.classList.remove('open');
       });
+    style.
+      html {
+        padding: 0;
+        margin: 0;
+        background-color: black;
+      }
+
+      body {
+        padding: 0;
+        background-color: black;
+        font-family: Roboto, sans-serif;
+        left: 0;
+        line-height: 1.35;
+        margin: 0;
+        overflow: hidden;
+        position: relative;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        transition: left 0.3s ease-in-out;
+      }
+
+      body.panel-open {
+        left: -250px;
+      }
+
+      .container {
+        min-height: 1000px;
+      }
+
+      header {
+        color: #fff;
+        padding: 3em 5%;
+        position: relative;
+        width: 110%;
+        z-index: 2;
+      }
+
+      .menu-toggle {
+        cursor: pointer;
+        float: right;
+        font-size: 0.875rem;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .menu-toggle.open {
+        opacity: 0.5;
+      }
+
+      .menu-toggle-grippy {
+        border-bottom: 5px solid #fff;
+        border-top: 5px solid #fff;
+        float: left;
+        line-height: 0;
+        margin-right: 1em;
+        padding: 5px 0;
+        text-indent: -999em;
+        width: 35px;
+      }
+
+      .menu-toggle-grippy:after {
+        background: #fff;
+        content: "";
+        display: block;
+        height: 5px;
+      }
+
+      .menu-toggle-label {
+        float: left;
+        font-weight: 700;
+        height: 25px;
+        letter-spacing: 1px;
+        line-height: 25px;
+        text-transform: uppercase;
+      }
+
+      .hidden-panel {
+        background: #333;
+        color: #666;
+        font-size: 0.875rem;
+        height: 100%;
+        position: absolute;
+        right: -250px;
+        top: 0;
+        width: 250px;
+      }
+
+      .hidden-panel a {
+        color: #999;
+        transition: color 0.3s ease-out;
+      }
+
+      .hidden-panel a:hover {
+        color: #fff;
+      }
+
+      .hidden-panel-close {
+        color: #666;
+        cursor: pointer;
+        position: absolute;
+        right: 20px;
+        top: 3.7em;
+        transition: color 0.3s ease-in-out;
+      }
+
+      .hidden-panel-close:hover {
+        color: #fff;
+      }
+
+      .hidden-panel-content {
+        padding: 3.65em 10%;
+      }
+
+      .hidden-panel-nav {
+        border-bottom: 1px solid #666;
+        border-bottom: 1px solid rgba(102, 102, 102, 0.25);
+        margin-bottom: 1.5em;
+        padding-bottom: 1.5em;
+        text-transform: uppercase;
+      }
+
+      .hidden-panel-nav h3 {
+        letter-spacing: 1px;
+        margin-bottom: 1em;
+      }
+
+      .hidden-panel-nav ul {
+        list-style: none;
+        font-weight: 600;
+        margin: 0;
+        padding: 0;
+      }
+
+      .hidden-panel-nav li {
+        padding: 0.25em 0;
+      }
+
+      .hidden-panel-text {
+        line-height: 1.5;
+      }
+
+      .titles-display {
+        // width: 1000px;
+        overflow-y: scroll;
+        position: relative;
+        height: 260px;
+      }
+
+      .hidden-panel-text p {
+        margin-bottom: 1.5em;
+      }
+
+      .hidden-panel-text p:last-child {
+        margin-bottom: 0;
+      }
+
+      .hidden-panel-credits {
+        font-size: 12px;
+        font-size: 0.75rem;
+        line-height: 1.5;
+      }
+
+      .hidden-panel-credits span {
+        display: block;
+        margin-bottom: 0.15em;
+      }
+
+      .banner {
+        background: black;
+        box-sizing: border-box;
+        height: 100%;
+        left: 0;
+        padding-bottom: 200px;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100%;
+        z-index: 1;
+      }
+
+      .banner h1 {
+        color: #fff;
+        font-family: "Dancing Script";
+        font-size: 4.375rem;
+        margin-bottom: 1em;
+      }
+
+      .banner h2 {
+        color: #fff;
+        font-size: 2rem;
+        font-weight: 300;
+        line-height: 1.5;
+        margin: 0 auto;
+        width: 50%;
+      }
+
+      .container:before, header:before, .menu-toggle:before, .container:after, header:after, .menu-toggle:after {
+        content: "";
+        display: table;
+      }
+
+      .container:after, header:after, .menu-toggle:after {
+        clear: both;
+      }
+
+      #myInput {
+        width: 200px;
+        height: 10px font-size: 16px; 
+        //- padding: 12px 20px 12px 40px;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;
+      }
+
+      #animBox {
+        margin-bottom: 10px
+      }
+
+      #animDesc {
+        padding-top: 4px;
+        padding-bottom: 4px;
+        font-size: 8pt;
+        color: white;
+      }
+
+      .row {
+        padding-bottom: 10px;
+      }

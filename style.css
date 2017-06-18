@@ -1,3 +1,27 @@
+html {
+  padding: 0;
+  margin: 0;
+  background-color: black;
+}
+
+body {
+  padding: 0;
+  background-color: black;
+  font-family: Roboto, sans-serif;
+  left: 0;
+  line-height: 1.35;
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  transition: left 0.3s ease-in-out;
+}
+
+body.panel-open {
+  left: -250px;
+}
+
 .container {
   min-height: 1000px;
 }
@@ -16,7 +40,7 @@ header {
   color: #fff;
   padding: 3em 5%;
   position: relative;
-  width: 90%;
+  width: 110%;
   z-index: 2;
 }
 
@@ -26,6 +50,7 @@ header {
   font-size: 0.875rem;
   transition: all 0.3s ease-in-out;
 }
+
 .menu-toggle.open {
   opacity: 0.5;
 }
@@ -40,6 +65,7 @@ header {
   text-indent: -999em;
   width: 35px;
 }
+
 .menu-toggle-grippy:after {
   background: #fff;
   content: "";
@@ -66,10 +92,12 @@ header {
   top: 0;
   width: 250px;
 }
+
 .hidden-panel a {
   color: #999;
   transition: color 0.3s ease-out;
 }
+
 .hidden-panel a:hover {
   color: #fff;
 }
@@ -82,6 +110,7 @@ header {
   top: 3.7em;
   transition: color 0.3s ease-in-out;
 }
+
 .hidden-panel-close:hover {
   color: #fff;
 }
@@ -97,16 +126,19 @@ header {
   padding-bottom: 1.5em;
   text-transform: uppercase;
 }
+
 .hidden-panel-nav h3 {
   letter-spacing: 1px;
   margin-bottom: 1em;
 }
+
 .hidden-panel-nav ul {
   list-style: none;
   font-weight: 600;
   margin: 0;
   padding: 0;
 }
+
 .hidden-panel-nav li {
   padding: 0.25em 0;
 }
@@ -114,9 +146,18 @@ header {
 .hidden-panel-text {
   line-height: 1.5;
 }
+
+.titles-display {
+  // width: 1000px;
+  overflow-y: scroll;
+  position: relative;
+  height: 260px;
+}
+
 .hidden-panel-text p {
   margin-bottom: 1.5em;
 }
+
 .hidden-panel-text p:last-child {
   margin-bottom: 0;
 }
@@ -126,30 +167,32 @@ header {
   font-size: 0.75rem;
   line-height: 1.5;
 }
+
 .hidden-panel-credits span {
   display: block;
   margin-bottom: 0.15em;
 }
 
 .banner {
-  background: #f5756c;
-  background: linear-gradient(#f5756c, #fd5480), #f5756c;
+  background: black;
   box-sizing: border-box;
   height: 100%;
   left: 0;
-  padding: 5em 0;
+  padding-bottom: 200px;
   position: absolute;
   text-align: center;
   top: 0;
   width: 100%;
   z-index: 1;
 }
+
 .banner h1 {
   color: #fff;
   font-family: "Dancing Script";
   font-size: 4.375rem;
   margin-bottom: 1em;
 }
+
 .banner h2 {
   color: #fff;
   font-size: 2rem;
@@ -166,4 +209,26 @@ header {
 
 .container:after, header:after, .menu-toggle:after {
   clear: both;
+}
+
+#myInput {
+  width: 200px;
+  height: 10px font-size: 16px; //- padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#animBox {
+  margin-bottom: 10px
+}
+
+#animDesc {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  font-size: 8pt;
+  color: white;
+}
+
+.row {
+  padding-bottom: 10px;
 }
