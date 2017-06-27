@@ -38,7 +38,6 @@ html
               performAnimation()
             } else {
               animated = false;
-              panTo()
 
 
             }
@@ -59,7 +58,6 @@ html
                 dontAllowTimeElapse = true;
                 performAnimation()
               }
-              console.log(animated);
               //alert(animated);
               
               touchtime = 0;
@@ -114,6 +112,7 @@ html
                   var curLink = links[i][j];
                   var curLoc = val.results[0].formatted_address;
                   
+                  
                   setMarkers(location.lat + (Math.random() * (Math.round(Math.random()) * 2 - 1)), location.lng + (0.25 * (Math.round(Math.random()) * 2 - 1)), curTitle, curLink, curLoc);
                   count2++;
 
@@ -126,7 +125,9 @@ html
         }
   
         function setMarkers(lat, lng, ct, cl, cLoc) {
-          WE.marker([lat, lng]).addTo(earth).bindPopup("<b>" + ct + "</b><br>" + cLoc +"<br /><span style='font-size:10px;color:#999'><a href=" + cl + " target='_blank'>View Full Article</a>"  + "</span>", {maxWidth: 300, closeButton: true}).closePopup();
+          var curMarker = WE.marker([lat, lng]);
+          markers.push(curMarker);
+          curMarker.addTo(earth).bindPopup("<b>" + ct + "</b><br>" + cLoc +"<br /><span style='font-size:10px;color:#999'><a href=" + cl + " target='_blank'>View Full Article</a>"  + "</span>", {maxWidth: 300, closeButton: true}).closePopup();
         }
 
         function isProperCity(city, title, link) {
@@ -174,18 +175,19 @@ html
             
           });
         }
+        var i = 0;
         
         function panTo() {
-          earth.panTo([65, 17])
-          zoomIn()
+          markers[i].openPopup();
+          console.log("marker: " + i);
+          console.log(markers.length)
+          i++;
+          if ( i < markers.length ) {
+              setTimeout( panTo, 500 );
+          }
+
         }
-        
-        function zoomIn() {
-          alert(earth.getSize())
-        }
-        
-        
-        
+
       }
 
   body(onload='initialize()')
